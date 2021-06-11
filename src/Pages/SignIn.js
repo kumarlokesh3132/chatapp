@@ -6,33 +6,30 @@ import { auth, database} from '../misc/firebase'
 
 const SignIn = () =>  {
 
-  const singInwithProvider = async (provider) => {
+  const signInWithProvider = async provider => {
+    try {
+      const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
 
-    try{
-      const {additionalUserInfo, user} =await auth.signInWithPopup(provider);
-      if(additionalUserInfo.isNewUser){
-        await database.ref(`profiles/${user.uid}`).set({
+      if (additionalUserInfo.isNewUser) {
+  
+        await database.ref(`/profile/${user.uid}`).set({
           name: user.displayName,
-          createdAt: firebase.database.ServerValue.TIMESTAMP
-        })
+          createdAt: firebase.database.ServerValue.TIMESTAMP,
+        });
       }
-      Alert.success('Signed In')
 
-    }catch(err){
-        Alert.error(err.message, 4000)
-        // eslint-disable-next-line no-console
-        console.log(err.message)
+      Alert.success('Signed in', 4000);
+    } catch (err) {
+      Alert.error(err.message, 4000);
     }
-    
-    
   };
 
   const onFacebook = () => {
-      singInwithProvider( new firebase.auth.FacebookAuthProvider() );
+    signInWithProvider( new firebase.auth.FacebookAuthProvider() );
   };
 
   const onGoogle = () => {
-    singInwithProvider( new firebase.auth.GoogleAuthProvider() );
+    signInWithProvider( new firebase.auth.GoogleAuthProvider() );
   };
   return(
     <Container>

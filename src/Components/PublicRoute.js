@@ -12,7 +12,7 @@ const PublicRoute = ({ children, ...routeprops}) => {
     </Container>)
   }
 
-  if(profile){
+  if(profile && !isLoading){
     return <Redirect to="/" />
   }
   return (

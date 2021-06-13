@@ -4,6 +4,7 @@ import AvatarEditor from 'react-avatar-editor'
 import { useModelState } from '../../misc/custom-hooks'
 import { database, storage } from '../../misc/firebase';
 import { useProfile } from '../../context/profile.context';
+import ProfileAvatar from './ProfileAvatar';
 
 
 
@@ -74,17 +75,15 @@ const AvatarUploadBtn = () => {
       
     } catch (err) {
       setIsLoading(false);
-      Alert.error(err.message, 4000);
-      // eslint-disable-next-line no-console
-      console.log(err.message);
-      
-      
+      Alert.error(err.message, 4000);   
     }
-
   }
 
   return (
     <div className="mt-3 text-center">
+
+      <ProfileAvatar src={profile.avatar} name={profile.name} className="height-200 width-200 img-fullsize font-huge"/>
+
       <div>
         <label htmlFor="avatar-upload" className="d-block cursor-pointer padded">
           Select new Avatar

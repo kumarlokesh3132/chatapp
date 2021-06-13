@@ -9,7 +9,6 @@ const Home = () => (
         <SideBar />
         </Col>
       </Row>
-      hello
     </Grid>
   )
 

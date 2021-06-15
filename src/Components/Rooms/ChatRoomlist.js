@@ -17,10 +17,10 @@ const ChatRoomlist = ({ aboveElementHeight }) => {
     activekey={location.pathname}
   >
       {!room && <Loader center vertical content="loading" speed="slow" size="md" />}
-      {room && room.length > 0 && room.map(rooms => 
-        <Nav.Item componentClass={Link} to={`chat/${rooms.id}`} key={rooms.id} eventKey={`chat/${rooms.id}`}>  
+      {room && room.length > 0 && room.map(rooms => (<Nav.Item componentClass={Link} to={`/chat/${rooms.id}`} key={rooms.id} eventKey={`/chat/${rooms.id}`}>  
         <RoomItem rooms={rooms}/>
-      </Nav.Item>)}
+      </Nav.Item>)
+        )}
       
     </Nav>
   )

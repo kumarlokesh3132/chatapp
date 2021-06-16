@@ -5,6 +5,7 @@ import { useModelState } from '../../misc/custom-hooks'
 import { database, storage } from '../../misc/firebase';
 import { useProfile } from '../../context/profile.context';
 import ProfileAvatar from './ProfileAvatar';
+import { getUserUpdates } from '../../misc/helpers';
 
 
 
@@ -65,13 +66,17 @@ const AvatarUploadBtn = () => {
       });
 
       const downloadURL = await avatarUploadResult.ref.getDownloadURL();
-      const userAvatarRef = database.ref(`/profile/${profile.uid}`).child('avatar')
-      userAvatarRef.set(downloadURL);
+      // const userAvatarRef = database.ref(`/profile/${profile.uid}`).child('avatar')
+      // userAvatarRef.set(downloadURL);
+
+      
+      const updates = await getUserUpdates(profile.uid, 'avatar', downloadURL, database);
+
+      await database.ref().update(updates);
 
       setIsLoading(false);
 
       Alert.info('Avatar has been uploaded', 4000)
-
       
     } catch (err) {
       setIsLoading(false);

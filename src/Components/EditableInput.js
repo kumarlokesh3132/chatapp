@@ -2,7 +2,13 @@ import React, { useState, useCallback } from 'react'
 import { Input, Icon, InputGroup, Alert} from 'rsuite';
 
 
-const EditableInput = ({ initialValue, onSave, label=null, placeholder = "Write your Value", emptyMsg="Input is empty ", ...inputProps}) => {
+const EditableInput = ({ initialValue,
+   onSave,
+   label=null, 
+   placeholder = "Write your Value", 
+   emptyMsg="Input is empty ",
+   wrapperClassName = "", 
+   ...inputProps}) => {
   const [input, setInput] = useState(initialValue);
   const [isEditable, setIsEditable] = useState(false);
 
@@ -38,7 +44,7 @@ const EditableInput = ({ initialValue, onSave, label=null, placeholder = "Write 
   
 
   return (
-    <div>
+    <div className={wrapperClassName}>
     {label}
     <InputGroup>
     <Input {...inputProps}

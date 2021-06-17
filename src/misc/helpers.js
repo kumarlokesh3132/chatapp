@@ -7,12 +7,15 @@ export function getNameInitials(name){
   return splitName[0][0];
 }
 
+export function transformToArr(snapVal){
+  return snapVal ? Object.keys(snapVal) : [];
+}
+
 export function transformToArray(snapValue){
   return snapValue ? Object.keys(snapValue).map(roomId => {
     return {...snapValue[roomId], id: roomId}
   }) : []
 }
-
 export async function getUserUpdates(userId, keyToUpdate, value, db) {
   const updates = {};
 

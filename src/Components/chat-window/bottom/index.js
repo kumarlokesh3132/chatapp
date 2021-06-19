@@ -15,7 +15,8 @@ function assembleMessage(profile, chatId){
       createdAt: profile.createdAt,
       ...(profile.avatar ? {avatar: profile.avatar} : {})
     },
-    createdAt: firebase.database.ServerValue.TIMESTAMP
+    createdAt: firebase.database.ServerValue.TIMESTAMP,
+    likesCount: 0
   };
 }
 
@@ -50,7 +51,8 @@ const ChatBottom = () => {
     updates[`/messages/${messageId}`] = msgData;
     updates[`room/${chatId}/lastMessage`] = {
       ...msgData,
-      msgId: messageId
+      msgId: messageId,
+
     };
 
     setIsLoading(true);

@@ -86,8 +86,6 @@ const Messages = () => {
       }
 
       const isLast = messages[messages.length - 1].id === msgId;
-      // eslint-disable-next-line no-console
-      console.log(isLast);
 
       const updates = {};
 

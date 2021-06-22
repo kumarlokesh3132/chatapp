@@ -16,6 +16,7 @@ export function transformToArray(snapValue){
     return {...snapValue[roomId], id: roomId}
   }) : []
 }
+
 export async function getUserUpdates(userId, keyToUpdate, value, db) {
   const updates = {};
 
@@ -44,4 +45,18 @@ export async function getUserUpdates(userId, keyToUpdate, value, db) {
   });
 
   return updates;
+}
+
+export function groupBy(array, groupKeyFn){
+  return array.reduce((result, item) => {
+
+    const groupingKey = groupKeyFn(item);
+
+    if(!result[groupingKey]){
+        result[groupingKey] = [];
+    }
+
+    result[groupingKey].push(item);
+    return result;
+  }, {})
 }

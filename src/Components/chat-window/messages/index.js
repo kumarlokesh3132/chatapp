@@ -1,35 +1,67 @@
 /* eslint-disable consistent-return */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams } from 'react-router';
-import { Alert } from 'rsuite'
+import { Alert, Button } from 'rsuite'
 import { auth, database, storage } from '../../../misc/firebase'
 import { groupBy, transformToArray } from '../../../misc/helpers';
 import MessageItem from './MessageItem';
+
+
+const PAGE_SIZE = 15;
+const messageRefer = database.ref('/messages');
 
 const Messages = () => {
 
   const { chatId } = useParams();
   const [messages, setMessages] = useState(null);
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const selfRef = useRef(); 
 
   const isChatEmpty = messages && messages.length === 0;
   const canShowMessage = messages && messages.length > 0;
 
-  useEffect(() => {
-    
-    const messageRef = database.ref('/messages');
+  const loadMessages = useCallback((limitToLast) => {
 
-    messageRef.orderByChild('roomId').equalTo(chatId).on('value', (snap) => {
+    messageRefer.off();
+
+    messageRefer.orderByChild('roomId').equalTo(chatId).limitToLast(limitToLast || PAGE_SIZE).on('value', (snap) => {
       const data = transformToArray(snap.val());
 
       setMessages(data);
 
     })
+
+    setLimit(p => p + PAGE_SIZE)
+
+  },[chatId])
+
+  const onLoadMore = useCallback(() => {
+    const node = selfRef.current;   
+    const oldHeight = node.scrollHeight;
+    loadMessages(limit)
+    setTimeout(() => {  
+      const newHeight =   node.scrollHeight;
+  
+      node.scrollTop = newHeight - oldHeight;
+    }, 600);
+
+
+  }, [loadMessages, limit])
+
+  useEffect(() => {
+    const node = selfRef.current;    
+    loadMessages();
+
+    setTimeout(() => {      
+      node.scrollTop = node.scrollHeight;
+    }, 600);
+
     
     return () => {
-      messageRef.off('value');
+      messageRefer.off('value');
     }
 
-  }, [chatId])
+  }, [loadMessages])
 
   const handleAdmin = useCallback(
     async (uid) => {
@@ -141,7 +173,12 @@ const Messages = () => {
   }
 
   return (
-    <ul className="msg-list custom-scroll">
+    <ul ref={selfRef} className="msg-list custom-scroll">
+      {messages && messages.length >= PAGE_SIZE && <li className="text-center mt-2 mb-2">
+        <Button  onClick={onLoadMore} color="green">
+          Load More
+        </Button>
+      </li>}
      {isChatEmpty && <li>No messages yet</li>} 
      {canShowMessage && renderMessages() }
     </ul>
@@ -149,5 +186,3 @@ const Messages = () => {
 }
 
 export default Messages
-
-// messages.map(msg => <MessageItem key={msg.id} message={msg} handleAdmin={handleAdmin} handleLike={handleLike} handleDelete={handleDelete}/>)

@@ -10,6 +10,14 @@ import MessageItem from './MessageItem';
 const PAGE_SIZE = 15;
 const messageRefer = database.ref('/messages');
 
+function scrollToBottom(node, threshold = 30){
+
+  const percentage = (100 * node.scrollTop) / (node.scrollHeight - node.clientHeight) || 0 ;
+
+  return percentage > threshold
+
+}
+
 const Messages = () => {
 
   const { chatId } = useParams();
@@ -21,14 +29,15 @@ const Messages = () => {
   const canShowMessage = messages && messages.length > 0;
 
   const loadMessages = useCallback((limitToLast) => {
+    const node = selfRef.current;
 
     messageRefer.off();
 
     messageRefer.orderByChild('roomId').equalTo(chatId).limitToLast(limitToLast || PAGE_SIZE).on('value', (snap) => {
-      const data = transformToArray(snap.val());
-
+      const data = transformToArray(snap.val());      
       setMessages(data);
-
+      if(scrollToBottom(node))
+      node.scrollTop = node.scrollHeight;
     })
 
     setLimit(p => p + PAGE_SIZE)
@@ -38,7 +47,7 @@ const Messages = () => {
   const onLoadMore = useCallback(() => {
     const node = selfRef.current;   
     const oldHeight = node.scrollHeight;
-    loadMessages(limit)
+    loadMessages(limit);
     setTimeout(() => {  
       const newHeight =   node.scrollHeight;
   

@@ -8,7 +8,7 @@ import { isOfflineForDatabase } from '../../context/profile.context'
 const DashboardToggle = () => {
 
   const { isOpen, open, close } = useModelState()
-  const isMobile = useMediaQuery('max-width: 992px')
+  const isMobile = useMediaQuery('(max-width: 992px)')
 const onSignOut = useCallback(
   () => {
     

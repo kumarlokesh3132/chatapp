@@ -6,17 +6,16 @@ import AvatarUploadBtn from './AvatarUploadBtn'
 import EditableInput from '../EditableInput'
 import ProviderBlock from './ProviderBlock'
 import { getUserUpdates } from '../../misc/helpers'
+// import { useMediaQuery } from '../../misc/custom-hooks'
 
 const Dashboard = ({onSignOut}) => {
 
   const {profile} = useProfile();
+  // const isMobile = useMediaQuery('(max-width: 992px)');
 
   const onSave = async newData => {
-    // const userNickname = database.ref(`/profile/${profile.uid}`).child('name');
 
     try{
-        // await userNickname.set(newData);
-
         const updates = await getUserUpdates(profile.uid, 'name', newData, database);
 
         await database.ref().update(updates);
@@ -33,6 +32,7 @@ const Dashboard = ({onSignOut}) => {
 
 
     <>
+  
       <Drawer.Header>
         <Drawer.Title>
       Dashboard
@@ -56,6 +56,7 @@ const Dashboard = ({onSignOut}) => {
         </Button>
 
       </Drawer.Footer>
+
       </>
     
   )
